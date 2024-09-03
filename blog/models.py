@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.urls import reverse
 
 # Create your models here.
 class PublishedManager(models.Manager):
@@ -30,6 +31,16 @@ class Post_djb(models.Model):
             models.Index(fields=['-publish']),
         ]
     
-        def __str__(self):
-            return self.title  
+    def __str__(self):
+        return self.title  
+        
+    def get_absolute_url(self):
+        """
+        Returns the absolute URL of this Post_djb instance.
+
+        :return: The absolute URL of this Post_djb instance.
+        """
+        return reverse("blog:post_detail", args=[self.id])
+
+
 
