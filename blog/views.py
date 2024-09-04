@@ -14,7 +14,7 @@ def post_list(request):
     return render(request, 'blog/post/list.html', {'posts': posts})
 
 
-def post_detail(request, id):
+def post_detail(request, year, month, day, post):
     
     """
     Displays a single post.
@@ -23,5 +23,12 @@ def post_detail(request, id):
     :param id: The ID of the post to display
     :return: A rendered HTML page
     """
-    post = get_object_or_404(Post_djb, id = id, status = Post_djb.Status.PUBLISHED)
+    post = get_object_or_404(
+        Post_djb,
+        status = Post_djb.Status.PUBLISHED,
+        slug = post,
+        publish__year = year,
+        publish__month = month,
+        publish__day = day
+        )
     return render(request, 'blog/post/detail.html', {'post': post})
