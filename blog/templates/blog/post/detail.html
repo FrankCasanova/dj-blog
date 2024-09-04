@@ -7,8 +7,32 @@
   <p class="date">
     Published {{ post.publish }} by {{ post.author }}
   </p>
+<div class="text-body">
   {{ post.body|linebreaks }}
-  <p>
-    <a href="{% url 'blog:post_list' %}" class="btn btn-secondary">Back to Blog List</a>
-  </p>
+ </div>
+<button class="btn-detail"><a class="a-detail" href="{% url 'blog:post_list' %}" class="btn btn-secondary">Back to Blog List</a></button>
+<button class="btn-detail">
+  <a  class="a-detail" href="{% url "blog:post_share" post.id %}">
+    Share this post
+  </a>
+  </button>
+
+
+{% with comments.count as total_comments %}
+  <h2>
+    {{ total_comments }} comment{{ total_comments|pluralize }}
+  </h2>
+{% endwith %}
+{% for comment in comments %}
+  <div class="comment">
+    <p class="info">
+      Comment {{ forloop.counter }} by {{ comment.name }}
+      {{ comment.created }}
+    </p>
+    {{ comment.body|linebreaks }}
+  </div>
+{% empty %}
+  <p>There are no comments yet.</p>
+{% endfor %}
+{% include "blog/post/includes/comment_form.html" %}
 {% endblock %}

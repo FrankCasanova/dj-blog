@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post_djb
+from .models import Post_djb, Comment_djb
 # Register your models here.
 
 
@@ -13,3 +13,10 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish'
     ordering = ('status', 'publish')
     show_facets = admin.ShowFacets.ALWAYS
+
+
+@admin.register(Comment_djb)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'post', 'created', 'active')
+    list_filter = ('active', 'created', 'updated')
+    search_fields = ('name', 'email', 'body')
