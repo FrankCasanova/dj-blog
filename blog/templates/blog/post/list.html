@@ -1,14 +1,24 @@
 {% extends "blog/base.html" %}
 
-{% block title %}My Blog{% endblock %}
+{% block title %}The Vault{% endblock %}
 
 {% block content %}
-  <h1>My Blog</h1>
+<a href="{% url 'blog:post_list' %}">
+  <h1 class="title">The Vault</h1>
+</a>
   {% for post in posts %}
     
       <a href="{{ post.get_absolute_url }}">
         <h2 class="post-title">{{ post.title }}</h2>
       </a>
+      <p class="tags">
+        Tags:
+        {% for tag in post.tags.all %}
+          <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+            {{ tag.name }}
+          </a>{% if not forloop.last %} {% endif %}
+        {% endfor %}
+      </p>
     
     <p class="date">
       Published {{ post.publish }} by {{ post.author }}

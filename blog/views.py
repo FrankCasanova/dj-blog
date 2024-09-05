@@ -5,6 +5,8 @@ from .models import Post_djb
 from .forms import EmailPostForm, CommentForm
 from django.views.generic import ListView
 from django.views.decorators.http import require_POST
+from taggit.models import Tag
+
 # Create your views here.
 
 @require_POST
@@ -23,6 +25,24 @@ class PostListView(ListView):
     context_object_name = 'posts'
     paginate_by = 4
     template_name = 'blog/post/list.html'
+    tag = None
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.tag:
+            queryset = queryset.filter(tags__in=[self.tag])
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
+        return context
+
+    def get(self, request, tag_slug=None):
+        if tag_slug:
+            self.tag = get_object_or_404(Tag, slug=tag_slug)
+        return super().get(request)
+    
     
 # def post_list(request):
 
