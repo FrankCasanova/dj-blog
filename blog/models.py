@@ -67,9 +67,9 @@ class Comment_djb(models.Model):
     active = models.BooleanField(default=True)
 
     class Meta:
-        ordering = ['created']
+        ordering = ['-created']
         indexes = [
-            models.Index(fields=['created']),
+            models.Index(fields=['-created']),
         ]
 
     def __str__(self):
