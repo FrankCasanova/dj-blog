@@ -9,7 +9,7 @@
     Published {{ post.publish }} by {{ post.author }}
   </p>
 <div class="text-body">
-  {{ post.body|markdown }}
+  {{ post.body|markdown}}
  </div>
 <button class="btn-detail"><a class="a-detail" href="{% url 'blog:post_list' %}" class="btn btn-secondary">Back to Blog List</a></button>
 <button class="btn-detail">

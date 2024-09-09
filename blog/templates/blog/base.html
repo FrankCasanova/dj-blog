@@ -14,7 +14,7 @@
   <div id="sidebar">
     <h2>Frank Casanova</h2>
     <p>I've written {% total_posts %} posts so far.</p>
-    <h3>Latest posts:<h3>
+    <h3>Latest posts:</h3>
     {% show_latest_posts 5 %}
     <h3>Most commented posts</h3>
     {% get_most_commented_posts as most_commented_posts %}
@@ -25,6 +25,11 @@
         </li>
       {% endfor %}
     </ul>
+    <h3>Search</h3>
+    <form action="{% url 'blog:post_search' %}" method="get">
+      <input type="text" name="query" placeholder="Search posts...">
+      <input type="submit" value="Search">
+    </form>
   </div>
 </body>
 </html>

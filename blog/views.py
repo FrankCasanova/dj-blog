@@ -3,15 +3,66 @@ from django.shortcuts import render, get_object_or_404
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from .models import Post_djb
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 from django.views.generic import ListView
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 # Create your views here.
 
+def post_search(request):
+    """
+    This view is used to search blog posts using a search form. The view
+    will filter the published posts using the search query and rank them
+    using the SearchRank function from the django.contrib.postgres.search
+    module. The view will then render the results in a template that
+    displays the search form and the search results.
+
+    :param request: The request object
+    :return: The rendered template
+    """
+    form = SearchForm()
+    query = None
+    results = []
+
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', 'body', config='english')
+            search_query = SearchQuery(query)
+            results = (
+                Post_djb.published.annotate(
+                    search=search_vector,
+                    rank=SearchRank(search_vector, search_query)
+                )
+                .filter(search=search_query)
+                .order_by('-rank')
+            )
+
+    return render(
+        request,
+        'blog/post/search.html',
+        {
+            'form': form,
+            'query': query,
+            'results': results
+        },
+    )
+
 @require_POST
 def post_comment(request, post_id):
+    """
+    Handles the comment submission for a blog post. The view will
+    validate the comment form and save the comment if the form is
+    valid. The view will then render the comment template to display
+    the comment.
+
+    :param request: The request object
+    :param post_id: The ID of the post to add the comment to
+    :return: The rendered template
+    """
     post = get_object_or_404(Post_djb, id=post_id, status=Post_djb.Status.PUBLISHED)
     comment = None
     form = CommentForm(data=request.POST)
@@ -28,7 +79,7 @@ class PostListView(ListView):
     template_name = 'blog/post/list.html'
     tag = None
 
-    def get_queryset(self):
+    def get_queryset(self):        
         queryset = super().get_queryset()
         if self.tag:
             queryset = queryset.filter(tags__in=[self.tag])

@@ -1,6 +1,9 @@
 from django import forms
 from .models import Comment_djb
 
+class SearchForm(forms.Form):
+    query = forms.CharField()
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment_djb
@@ -11,3 +14,4 @@ class EmailPostForm(forms.Form):
     email = forms.EmailField()
     to = forms.EmailField()
     comments = forms.CharField(required=True, widget=forms.Textarea)
+    
