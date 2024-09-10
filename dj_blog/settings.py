@@ -142,6 +142,14 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+if os.environ.get('VERCEL'):
+    #Tell django to copy statics to the staticsfiles directory
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    
+    # Turn on whitenoise storage backend that takes care of compressing static files
+    # and creating unique names for each version so they can safely be cached forever
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     
 
 
