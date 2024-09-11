@@ -21,7 +21,7 @@ This README provides instructions on setting up and running your Django applicat
 2. **Create a virtual environment (recommended):**
 
    ```bash
-   cd your_project_directory
+   cd dj-blog
    python -m venv venv  # Assuming Python 3
    source venv/bin/activate  # Activate the virtual environment
    ```
